@@ -10,11 +10,11 @@ char RANDOM_BUFFER[BUFSIZE];
 void output_prime(unsigned int bits) {
   BIGNUM *p = BN_new();
 
-  fprintf(stderr, "Generating prime of %d bits\n", bits);
+  //fprintf(stderr, "Generating prime of %d bits\n", bits);
 
   BN_generate_prime(p, bits, GENERATE_SAFE_PRIME, 0, 0, 0, 0);
   char *pdec = BN_bn2dec(p);
-  fprintf(stderr, "Generated prime: ");
+  //fprintf(stderr, "Generated prime: ");
   fprintf(stdout, "%s\n", pdec);
 
   free(pdec);
