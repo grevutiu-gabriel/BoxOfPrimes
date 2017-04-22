@@ -8,10 +8,12 @@ int GENERATE_SAFE_PRIME = 0;
 char RANDOM_BUFFER[BUFSIZE];
 
 void output_prime(unsigned int bits) {
-  BIGNUM *p = BN_new();
+  //BIGNUM *p = BN_new();
 
   //fprintf(stderr, "Generating prime of %d bits\n", bits);
-
+int k=0;
+for (k=0; k<=10000; k++){
+  BIGNUM *p = BN_new();
   BN_generate_prime(p, bits, GENERATE_SAFE_PRIME, 0, 0, 0, 0);
   char *pdec = BN_bn2dec(p);
   //fprintf(stderr, "Generated prime: ");
@@ -19,6 +21,7 @@ void output_prime(unsigned int bits) {
 
   free(pdec);
   BN_free(p);
+}
 }
 
 void error_and_exit(char *s) {
