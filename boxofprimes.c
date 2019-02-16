@@ -1,5 +1,8 @@
 #include <openssl/bn.h>
 #include <string.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <getopt.h>
 
 #define SMALL_PRIME_BITS (16)
 // TODO: Replace globals with config object
@@ -7,7 +10,7 @@ int GENERATE_SAFE_PRIME = 0;
 #define BUFSIZE (128)
 char RANDOM_BUFFER[BUFSIZE];
 
-void output_prime(unsigned int bits) {
+void output_prime_list(unsigned int bits) {
   //BIGNUM *p = BN_new();
 
   //fprintf(stderr, "Generating prime of %d bits\n", bits);
@@ -22,6 +25,20 @@ for (k=0; k<=10000; k++){
   free(pdec);
   BN_free(p);
 }
+}
+
+void output_prime(unsigned int bits) {
+  BIGNUM *p = BN_new();
+
+  fprintf(stderr, "Generating prime of %d bits\n", bits);
+
+  BN_generate_prime(p, bits, GENERATE_SAFE_PRIME, 0, 0, 0, 0);
+  char *pdec = BN_bn2dec(p);
+  fprintf(stderr, "Generated prime: ");
+  fprintf(stdout, "%s\n", pdec);
+
+  free(pdec);
+  BN_free(p);
 }
 
 void error_and_exit(char *s) {
@@ -80,16 +97,36 @@ int main(int argc, const char *argv[])
     } else if (strcmp(argv[i], "--safe") == 0) {
       GENERATE_SAFE_PRIME = 1;
     } else if (is_numeric_string(argv[i])) {
+      //fprintf(stdout, "%i\n", atoi(i));
       bits = atoi(argv[i]);
-    } else {
+    } /*else {
       error_and_exit("Could not parse command line arguments.");
-    }
+      //fprintf(stdout, "%f\n", atoi(i));
+            
+    }*/
   }
 
   if (bits < SMALL_PRIME_BITS) {
     small_prime_warning();
   }
-  output_prime(bits);
-
+  int opt;
+  while((opt = getopt(argc, argv, ":il")) != -1)
+  {
+	switch(opt)
+	{
+		case 'i':
+			output_prime(bits);
+			break;
+		case 'l':
+			output_prime_list(bits);
+			break;
+	}
+   }
+   //output_prime(bits);
+   
+   //for(; optind < argc; optind++){      
+       // printf("extra arguments: %s\n", argv[optind]);  
+    //} 
+   
   return 0;
 }
