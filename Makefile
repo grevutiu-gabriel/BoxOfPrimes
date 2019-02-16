@@ -1,2 +1,2 @@
 boxofprimes: boxofprimes.c
-	gcc boxofprimes.c -lssl -lcrypto -o boxofprimes
+	gcc -o boxofprimes boxofprimes.c -L /usr/lib/openssl-1.0 -lssl -lcrypto
